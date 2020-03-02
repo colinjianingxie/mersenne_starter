@@ -96,7 +96,7 @@ Bigint mult_big(Bigint a, Bigint b)
 			c.digits[j] = val % 10;
 		}
 	}
-	
+
 	// Trim any leading zeros
 	compress(&c);
 
@@ -144,7 +144,7 @@ int compare_big(Bigint a, Bigint b)
 	// if a has fewer digits than b, its definitely smaller
 	if( a.n < b.n )
 		return -1;
-	
+
 	// if a has more digits than b, its definitely larger
 	if( a.n > b.n )
 		return 1;
@@ -217,7 +217,7 @@ Bigint mod_big(Bigint a, Bigint b)
 	Bigint original_b = b;
 
 	// Keep multiplying the denominator (b) by 10 until it is larger than the numerator (a)
-	while( compare_big(a, b) == 1 ) // tests if a > b 
+	while( compare_big(a, b) == 1 ) // tests if a > b
 		shift_right(&b);
 
 	// We went too far, so divide once by 10
@@ -225,7 +225,7 @@ Bigint mod_big(Bigint a, Bigint b)
 
 	// At this point, we have the largest possible multiple of the denominator
 	// without being larger than the numerator.
-	
+
 	// Keep reducing size of denominator by factor of 10 until it equals its original size
 	while( compare_big(b,original_b) != -1 ) // tests if b >= original_b
 	{
@@ -253,7 +253,7 @@ int LLT(int p)
 	// Mp = 2^p - 1
 	Bigint Mp = pow_big(two, p);
 	Mp =  sub_big(Mp, one);
- 
+
 	// s = 4
 	Bigint s = digit_to_big(4);
 
@@ -294,12 +294,12 @@ int main(void)
 		if( is_small_prime(p) )
 		{
 			printf("Testing p = %d ", p);
-
-			// Run LLT test of Mp
-			int is_prime = LLT(p);
-
-			if(is_prime)
-			{
+            int is_odd = p % 2;
+            if(is_odd)
+            { // Run LLT test of Mp
+              int is_prime = LLT(p);
+              if(is_prime)
+              {
 				printf("found prime Mp = ");
 				Bigint one  = digit_to_big(1);
 				Bigint two  = digit_to_big(2);
@@ -308,10 +308,14 @@ int main(void)
 				Bigint Mp = pow_big(two, p);
 				Mp =  sub_big(Mp, one);
 				print_big(Mp);
-			}
+            }
 			else
-				printf("Mp not prime\n");
-
+              printf("Mp not prime\n");
+            }
+            // LLT is only valid for odd primes
+            // 2 is the only even prime
+            else
+              printf("found prime p = 2\n");
 		}
 	}
 
